@@ -1,5 +1,8 @@
+'use client'
+
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { useLanguage } from '@/lib/language-provider'
 import { wines } from '../../../src/data/wines'
 import { wineries } from '../../../src/data/wineries'
 import { varietals } from '../../../src/data/varietals'
@@ -9,6 +12,8 @@ type PageProps = {
 }
 
 export default function WineDetailPage({ params }: PageProps) {
+  const { lang } = useLanguage()
+  const showKorean = lang === 'ko'
   const wine = wines.find((w) => w.slug === params.slug)
 
   if (!wine) {
@@ -27,7 +32,7 @@ export default function WineDetailPage({ params }: PageProps) {
         href={winery ? `/wineries/${winery.slug}` : '/map'}
         className="text-xs text-slate-400 hover:text-accent"
       >
-        ← {winery ? `Back to ${winery.nameEn}` : 'Back to map'}
+        ← {winery ? `Back to ${showKorean ? winery.nameKo : winery.nameEn}` : 'Back to map'}
       </Link>
 
       <div className="grid gap-6 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1.2fr)] md:items-start">
@@ -49,9 +54,9 @@ export default function WineDetailPage({ params }: PageProps) {
         <div className="space-y-4">
           <div>
             <h1 className="font-display text-2xl text-slate-50">
-              {wine.nameEn}
+              {showKorean && wine.nameKo ? wine.nameKo : wine.nameEn}
             </h1>
-            <p className="text-sm text-slate-400">{wine.nameKo}</p>
+            {showKorean && wine.nameKo && <p className="text-sm text-slate-400">{wine.nameEn}</p>}
           </div>
           <div className="flex flex-wrap items-center gap-2 text-xs">
             <span className="rounded-full bg-slate-800 px-2 py-1 text-slate-100">
@@ -66,7 +71,7 @@ export default function WineDetailPage({ params }: PageProps) {
                     href={`/wineries/${winery.slug}`}
                     className="text-accent hover:underline"
                   >
-                    {winery.nameEn}
+                    {showKorean ? winery.nameKo : winery.nameEn}
                   </Link>
                 </>
               )}
@@ -151,7 +156,7 @@ export default function WineDetailPage({ params }: PageProps) {
                 href={`/varietals/${v.slug}`}
                 className="rounded-full border border-slate-700 px-3 py-1 text-slate-200 hover:border-accent"
               >
-                {v.nameEn}
+                {showKorean ? v.nameKo : v.nameEn}
               </Link>
             ))}
           </div>

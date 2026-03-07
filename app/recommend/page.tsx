@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
+import { useLanguage } from '@/lib/language-provider'
 import { varietals } from '../../src/data/varietals'
 import { wines } from '../../src/data/wines'
 
@@ -24,6 +25,8 @@ function bodyMatches(dataBody: string | undefined, pref: BodyPreference) {
 }
 
 export default function RecommendPage() {
+  const { lang } = useLanguage()
+  const showKorean = lang === 'ko'
   const [bodyPref, setBodyPref] = useState<BodyPreference>('any')
 
   const matchingVarietals = useMemo(
@@ -117,11 +120,13 @@ export default function RecommendPage() {
                 >
                   <div>
                     <div className="font-semibold text-slate-100">
-                      {v.nameEn}
+                      {showKorean ? v.nameKo : v.nameEn}
                     </div>
-                    <div className="text-[11px] text-slate-400">
-                      {v.nameKo}
-                    </div>
+                    {showKorean && (
+                      <div className="text-[11px] text-slate-400">
+                        {v.nameEn}
+                      </div>
+                    )}
                     <p className="mt-1 line-clamp-2 text-[11px] text-slate-300">
                       {v.oneLinerEn || v.oneLiner}
                     </p>
@@ -158,8 +163,11 @@ export default function RecommendPage() {
                 >
                   <div>
                     <div className="font-semibold text-slate-100">
-                      {w.nameEn}
+                      {showKorean && w.nameKo ? w.nameKo : w.nameEn}
                     </div>
+                    {showKorean && w.nameKo && (
+                      <div className="text-[11px] text-slate-400">{w.nameEn}</div>
+                    )}
                     <div className="text-[11px] text-slate-400">
                       {w.region} · {w.type}
                     </div>

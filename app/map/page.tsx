@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
+import { useLanguage } from '@/lib/language-provider'
 import { wineries } from '../../src/data/wineries'
 import { wines } from '../../src/data/wines'
 
@@ -16,6 +17,8 @@ function wineryProducesType(slug: string, wineType: string): boolean {
 }
 
 export default function MapPage() {
+  const { lang } = useLanguage()
+  const showKorean = lang === 'ko'
   const [regionFilter, setRegionFilter] = useState<string>('All regions')
   const [typeFilter, setTypeFilter] = useState<(typeof TYPE_FILTERS)[number]>('All types')
   const [searchQuery, setSearchQuery] = useState('')
@@ -136,8 +139,8 @@ export default function MapPage() {
             href={`/wineries/${w.slug}`}
             className="flex flex-col rounded-xl border border-slate-800 bg-surface p-4 text-sm text-slate-200 transition-colors hover:border-accent"
           >
-            <div className="mb-1 font-semibold">{w.nameEn}</div>
-            <div className="mb-2 text-xs text-slate-400">{w.nameKo}</div>
+            <div className="mb-1 font-semibold">{showKorean ? w.nameKo : w.nameEn}</div>
+            {showKorean && <div className="mb-2 text-xs text-slate-400">{w.nameEn}</div>}
             <p className="line-clamp-3 text-xs text-slate-300">
               {w.oneLinerEn || w.oneLiner}
             </p>

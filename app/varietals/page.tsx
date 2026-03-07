@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useLanguage } from '@/lib/language-provider'
 import { varietals } from '../../src/data/varietals'
 
 const TYPE_FILTERS: { value: 'all' | string; label: string }[] = [
@@ -13,7 +14,9 @@ const TYPE_FILTERS: { value: 'all' | string; label: string }[] = [
 ]
 
 export default function VarietalsPage() {
+  const { lang } = useLanguage()
   const [typeFilter, setTypeFilter] = useState<'all' | string>('all')
+  const showKorean = lang === 'ko'
 
   const filtered =
     typeFilter === 'all'
@@ -71,8 +74,8 @@ export default function VarietalsPage() {
             )}
             <div className="mb-1 flex items-baseline justify-between gap-2">
               <div>
-                <div className="font-semibold">{v.nameEn}</div>
-                <div className="text-xs text-slate-400">{v.nameKo}</div>
+                <div className="font-semibold">{showKorean ? v.nameKo : v.nameEn}</div>
+                {showKorean && <div className="text-xs text-slate-400">{v.nameEn}</div>}
               </div>
               <span className="rounded-full bg-slate-800 px-2 py-0.5 text-[11px] text-slate-200">
                 {v.type}

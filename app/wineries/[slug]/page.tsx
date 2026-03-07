@@ -1,5 +1,8 @@
+'use client'
+
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { useLanguage } from '@/lib/language-provider'
 import { wineries } from '../../../src/data/wineries'
 import { wines } from '../../../src/data/wines'
 
@@ -8,6 +11,8 @@ type PageProps = {
 }
 
 export default function WineryDetailPage({ params }: PageProps) {
+  const { lang } = useLanguage()
+  const showKorean = lang === 'ko'
   const winery = wineries.find((w) => w.slug === params.slug)
 
   if (!winery) {
@@ -41,9 +46,9 @@ export default function WineryDetailPage({ params }: PageProps) {
         <div className="space-y-4">
           <div>
             <h1 className="font-display text-2xl text-slate-50">
-              {winery.nameEn}
+              {showKorean ? winery.nameKo : winery.nameEn}
             </h1>
-            <p className="text-sm text-slate-400">{winery.nameKo}</p>
+            {showKorean && <p className="text-sm text-slate-400">{winery.nameEn}</p>}
           </div>
           <div className="flex flex-wrap items-center gap-2 text-xs">
             <span className="rounded-full bg-slate-800 px-2 py-1 text-slate-100">
@@ -101,7 +106,8 @@ export default function WineryDetailPage({ params }: PageProps) {
                     />
                   </div>
                 )}
-                <div className="font-semibold">{w.nameEn}</div>
+                <div className="font-semibold">{showKorean && w.nameKo ? w.nameKo : w.nameEn}</div>
+                {showKorean && w.nameKo && <div className="text-[11px] text-slate-400">{w.nameEn}</div>}
                 <div className="text-[11px] text-slate-400">
                   {w.region} · {w.type}
                 </div>
