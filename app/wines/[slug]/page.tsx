@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { useLanguage } from '@/lib/language-provider'
+import { REGION_NAME_TO_KEY, TYPE_LABEL_KEYS } from '@/lib/i18n/region-type-keys'
 import { wines } from '../../../src/data/wines'
 import { wineries } from '../../../src/data/wineries'
 import { varietals } from '../../../src/data/varietals'
@@ -12,7 +13,7 @@ type PageProps = {
 }
 
 export default function WineDetailPage({ params }: PageProps) {
-  const { lang } = useLanguage()
+  const { lang, t } = useLanguage()
   const showKorean = lang === 'ko'
   const wine = wines.find((w) => w.slug === params.slug)
 
@@ -60,10 +61,10 @@ export default function WineDetailPage({ params }: PageProps) {
           </div>
           <div className="flex flex-wrap items-center gap-2 text-xs">
             <span className="rounded-full bg-slate-800 px-2 py-1 text-slate-100">
-              {wine.type}
+              {TYPE_LABEL_KEYS[wine.type] ? t(TYPE_LABEL_KEYS[wine.type]) : wine.type}
             </span>
             <span className="text-slate-400">
-              {wine.region}
+              {REGION_NAME_TO_KEY[wine.region] ? t(REGION_NAME_TO_KEY[wine.region]) : wine.region}
               {winery && (
                 <>
                   {' · '}

@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { useLanguage } from '@/lib/language-provider'
+import { REGION_NAME_TO_KEY, TYPE_LABEL_KEYS } from '@/lib/i18n/region-type-keys'
 import { varietals } from '../../../src/data/varietals'
 import { wines } from '../../../src/data/wines'
 
@@ -10,13 +11,6 @@ type PageProps = {
   params: { slug: string }
 }
 
-const TYPE_LABEL_KEYS: Record<string, string> = {
-  레드: 'filter_red',
-  화이트: 'filter_white',
-  로제: 'filter_rose',
-  스파클링: 'filter_sparkling',
-  기타: 'filter_other',
-}
 const BODY_LABEL_KEYS: Record<string, string> = {
   가벼움: 'light_refreshing',
   미디엄: 'medium_versatile',
@@ -74,7 +68,7 @@ export default function VarietalDetailPage({ params }: PageProps) {
             </span>
             {varietal.regions.length > 0 && (
               <span className="text-slate-400">
-                · {varietal.regions.join(', ')}
+                · {varietal.regions.map((r) => REGION_NAME_TO_KEY[r] ? t(REGION_NAME_TO_KEY[r]) : r).join(', ')}
               </span>
             )}
             {varietal.body && (
@@ -136,7 +130,7 @@ export default function VarietalDetailPage({ params }: PageProps) {
                 <div className="font-semibold">{showKorean && w.nameKo ? w.nameKo : w.nameEn}</div>
                 {showKorean && w.nameKo && <div className="text-[11px] text-slate-400">{w.nameEn}</div>}
                 <div className="text-[11px] text-slate-400">
-                  {w.region} · {w.type}
+                  {REGION_NAME_TO_KEY[w.region] ? t(REGION_NAME_TO_KEY[w.region]) : w.region} · {TYPE_LABEL_KEYS[w.type] ? t(TYPE_LABEL_KEYS[w.type]) : w.type}
                 </div>
               </Link>
             ))}

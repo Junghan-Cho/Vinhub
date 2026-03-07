@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { useLanguage } from '@/lib/language-provider'
+import { REGION_NAME_TO_KEY, TYPE_LABEL_KEYS } from '@/lib/i18n/region-type-keys'
 import { wineries } from '../../../src/data/wineries'
 import { wines } from '../../../src/data/wines'
 
@@ -52,7 +53,7 @@ export default function WineryDetailPage({ params }: PageProps) {
           </div>
           <div className="flex flex-wrap items-center gap-2 text-xs">
             <span className="rounded-full bg-slate-800 px-2 py-1 text-slate-100">
-              {winery.region}
+              {REGION_NAME_TO_KEY[winery.region] ? t(REGION_NAME_TO_KEY[winery.region]) : winery.region}
             </span>
             {winery.classificationEn && (
               <span className="rounded-full border border-slate-700 px-2 py-1 text-slate-200">
@@ -109,7 +110,7 @@ export default function WineryDetailPage({ params }: PageProps) {
                 <div className="font-semibold">{showKorean && w.nameKo ? w.nameKo : w.nameEn}</div>
                 {showKorean && w.nameKo && <div className="text-[11px] text-slate-400">{w.nameEn}</div>}
                 <div className="text-[11px] text-slate-400">
-                  {w.region} · {w.type}
+                  {REGION_NAME_TO_KEY[w.region] ? t(REGION_NAME_TO_KEY[w.region]) : w.region} · {TYPE_LABEL_KEYS[w.type] ? t(TYPE_LABEL_KEYS[w.type]) : w.type}
                 </div>
               </Link>
             ))}

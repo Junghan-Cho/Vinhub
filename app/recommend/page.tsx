@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useLanguage } from '@/lib/language-provider'
+import { REGION_NAME_TO_KEY, TYPE_LABEL_KEYS } from '@/lib/i18n/region-type-keys'
 import { varietals } from '../../src/data/varietals'
 import { wines } from '../../src/data/wines'
 
@@ -28,6 +29,15 @@ function bodyMatches(dataBody: string | undefined, pref: BodyPreference) {
   if (pref === 'medium') return normalized.includes('미디엄') || normalized.includes('medium')
   if (pref === 'full') return normalized.includes('풀') || normalized.includes('full')
   return true
+}
+
+function regionLabel(region: string, t: (k: string) => string): string {
+  const key = REGION_NAME_TO_KEY[region]
+  return key ? t(key) : region
+}
+function typeLabel(type: string, t: (k: string) => string): string {
+  const key = TYPE_LABEL_KEYS[type]
+  return key ? t(key) : type
 }
 
 export default function RecommendPage() {
@@ -169,7 +179,7 @@ export default function RecommendPage() {
                       <div className="text-[11px] text-slate-400">{w.nameEn}</div>
                     )}
                     <div className="text-[11px] text-slate-400">
-                      {w.region} · {w.type}
+                      {regionLabel(w.region, t)} · {typeLabel(w.type, t)}
                     </div>
                     {w.oneLiner && (
                       <p className="mt-1 line-clamp-2 text-[11px] text-slate-300">

@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useLanguage } from '@/lib/language-provider'
+import { TYPE_LABEL_KEYS } from '@/lib/i18n/region-type-keys'
 import { varietals } from '../../src/data/varietals'
 
 const TYPE_FILTERS: { value: 'all' | string; labelKey: string }[] = [
@@ -12,14 +13,6 @@ const TYPE_FILTERS: { value: 'all' | string; labelKey: string }[] = [
   { value: '로제', labelKey: 'filter_rose' },
   { value: '스파클링', labelKey: 'filter_sparkling' },
 ]
-
-const TYPE_LABEL_KEYS: Record<string, string> = {
-  레드: 'filter_red',
-  화이트: 'filter_white',
-  로제: 'filter_rose',
-  스파클링: 'filter_sparkling',
-  기타: 'filter_other',
-}
 
 export default function VarietalsPage() {
   const { lang, t } = useLanguage()
