@@ -1,0 +1,62 @@
+'use client'
+
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+  type ReactNode,
+} from 'react'
+import { translations, type Lang } from './i18n/translations'
+
+const STORAGE_KEY = 'vinhub-lang'
+
+type LanguageContextType = {
+  lang: Lang
+  setLang: (l: Lang) => void
+  t: (key: string) => string
+}
+
+const LanguageContext = createContext<LanguageContextType | null>(null)
+
+export function LanguageProvider({ children }: { children: ReactNode }) {
+  const [lang, setLangState] = useState<Lang>(() => {
+    if (typeof window === 'undefined') return 'en'
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY) as Lang | null
+      const supported: Lang[] = ['ko', 'en', 'fr', 'it', 'ja', 'zh']
+      if (saved && supported.includes(saved)) return saved
+    } catch (_) {}
+    return 'en'
+  })
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, lang)
+    } catch (_) {}
+  }, [lang])
+
+  const setLang = useCallback((l: Lang) => setLangState(l), [])
+
+  const t = useCallback(
+    (key: string): string => {
+      const dict = translations[lang]
+      const fallback = translations.en
+      return dict?.[key] ?? fallback?.[key] ?? key
+    },
+    [lang]
+  )
+
+  return (
+    <LanguageContext.Provider value={{ lang, setLang, t }}>
+      {children}
+    </LanguageContext.Provider>
+  )
+}
+
+export function useLanguage(): LanguageContextType {
+  const ctx = useContext(LanguageContext)
+  if (!ctx) throw new Error('useLanguage must be used within LanguageProvider')
+  return ctx
+}

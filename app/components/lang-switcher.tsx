@@ -1,0 +1,40 @@
+'use client'
+
+import { useLanguage } from '@/lib/language-provider'
+import { SUPPORTED_LANGS, type Lang } from '@/lib/i18n/translations'
+
+const LABEL_KEYS: Record<Lang, string> = {
+  ko: 'lang_ko',
+  en: 'lang_en',
+  fr: 'lang_fr',
+  it: 'lang_it',
+  ja: 'lang_ja',
+  zh: 'lang_zh',
+}
+
+export function LangSwitcher() {
+  const { lang, setLang, t } = useLanguage()
+
+  return (
+    <div className="flex items-center gap-2">
+      <label
+        htmlFor="lang-select"
+        className="text-xs text-slate-400"
+      >
+        {t('language')}
+      </label>
+      <select
+        id="lang-select"
+        value={lang}
+        onChange={(e) => setLang(e.target.value as Lang)}
+        className="rounded border border-slate-600 bg-slate-800/80 px-2 py-1.5 text-sm text-slate-200 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+      >
+        {SUPPORTED_LANGS.map((l) => (
+          <option key={l} value={l}>
+            {t(LABEL_KEYS[l])}
+          </option>
+        ))}
+      </select>
+    </div>
+  )
+}
