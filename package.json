@@ -1,29 +1,29 @@
 {
-  "name": "wine-site",
+  "name": "vinhub-showroom",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "engines": { "node": ">=18" },
+  "version": "1.0.0",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "preview": "vite preview"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
-    "globe.gl": "^2.31.0",
-    "leaflet": "^1.9.4",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-leaflet": "^4.2.1",
-    "react-router-dom": "^6.22.0",
-    "three": "^0.171.0"
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest"
   },
   "devDependencies": {
-    "@types/leaflet": "^1.9.8",
-    "@types/react": "^18.2.55",
-    "@types/react-dom": "^18.2.19",
-    "@vitejs/plugin-react": "^4.2.1",
-    "typescript": "~5.2.2",
-    "vite": "^5.1.4"
+    "@tailwindcss/postcss": "^4.2.1",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "autoprefixer": "latest",
+    "postcss": "latest",
+    "tailwindcss": "^4.0.0",
+    "typescript": "latest"
   }
 }

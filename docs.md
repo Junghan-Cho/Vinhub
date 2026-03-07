@@ -6,14 +6,15 @@
 
 ### 1. 제품 컨셉 & 역할
 
-- **포지셔닝**: AI Vision × WSET SAT 기반 **데이터 드리븐 와인 쇼룸**.
+- **포지셔닝**: 예전 Vite 시절의 **지도/품종/와이너리 중심 Vinhub UI**를 계승한, 세계 유명 와인 아틀라스 스타일의 **전략적 쇼룸**.
 - **목적**:
-  - 와인 품종/스타일/지역/용어 검색으로 **오가닉 트래픽 확보**.
-  - 구조화된 콘텐츠와 미니 테이스팅 폼으로 **테이스팅 기록 욕구 자극**.
+  - 와인 품종/스타일/지역/용어 검색 + 지도 탐색으로 **오가닉 트래픽 확보**.
+  - 세계 유명 와인/와이너리/품종 정보를 구조화해 **학습·레퍼런스 허브** 역할 수행.
+  - 간단한 맛/바디 선택 → 와인 추천 플로우로 **실질적인 선택 도움**.
   - 핵심 유틸리티인 **VinLog 앱으로의 전환(Conversion)** 및 생태계 **락인(Lock-in)** 진입로.
 - **역할 분리**:
-  - **Vinhub 웹**: 쇼룸 + 교육 + 검색 + VinLog 퍼널 입구.
-  - **VinLog 앱**: 실제 테이스팅 노트 작성·저장·추천을 담당하는 핵심 유틸리티 (별도 모바일/백엔드).
+  - **Vinhub 웹**: 지도/품종/와이너리/와인 쇼룸 + 간단 추천 + 검색 + VinLog 소개.
+  - **VinLog 앱**: 라벨 인식, SAT 구조화, 교육 기능, 테이스팅 노트 기록·추천을 담당하는 핵심 유틸리티.
 
 ---
 
@@ -21,44 +22,38 @@
 
 - **프레임워크**: Next.js 16 (App Router, TypeScript).
   - 라우팅은 **반드시 `app/` 디렉토리 기준**으로 작업한다.
-  - 기존 `src/pages/**` 는 과거 Vite/SPA 시대의 유산으로, 새 기능은 `app/` 에만 추가.
+  - 기존 `src/pages/**`, `src/App.tsx` 등은 과거 Vite/SPA 레거시로, **Next 빌드에서는 제외** (`tsconfig.json` exclude: `src`). 새 기능은 `app/` 에만 추가.
 - **언어/도구**:
   - TypeScript
-  - Tailwind CSS **v3.4.x** (v4 아님) – `tailwindcss` + `postcss` + `autoprefixer`
+  - Tailwind CSS **v4** – `@tailwindcss/postcss` 플러그인 사용.
   - 빌드/런:
     - 개발: `npm run dev`
     - 빌드: `npm run build`
-    - 시작: `npm start`
+    - 시작: `npm start` (반드시 `npm run build` 후 실행)
 
 #### 2.1 디렉토리 구조 요약
 
 - `app/`
-  - `layout.tsx`: 전역 레이아웃, 헤더/푸터, VinLog CTA, `app/globals.css` 로 스타일링.
-  - `page.tsx`: 메인 랜딩 (AI Vision × WSET SAT 쇼룸).
-  - `grapes/` + `[slug]/page.tsx`: 품종 리스트/상세.
-  - `styles/` + `[slug]/page.tsx`: 상황/스타일 기반 추천.
+  - `layout.tsx`: 전역 레이아웃, 헤더/푸터, 심플한 Nav, 작은 VinLog 링크, `app/globals.css` 로 스타일링.
+  - `page.tsx`: 메인 랜딩 (클래식 Vinhub 홈 – 지도/품종/추천 티저).
+  - `varietals/page.tsx` + `varietals/[slug]/page.tsx`: 품종 리스트/상세.
+  - `map/page.tsx`: 지도/리스트 기반 와이너리 탐색(현재는 리스트, 추후 지도/글로브 추가 예정).
+  - `wineries/[slug]/page.tsx`: 와이너리 상세.
+  - `wines/[slug]/page.tsx`: 와인 상세/테크니컬 시트.
+  - `recommend/page.tsx`: 바디 기반 간단 추천(Varietal/Wine 서브셋 제안).
   - `glossary/page.tsx`: 용어집.
-  - `search/page.tsx`: 통합 검색.
-  - `ai-vision/page.tsx`: AI 비전 쇼룸.
-  - `tasting-education/page.tsx`: WSET SAT 테이스팅 교육.
-  - `vinlog/page.tsx`: VinLog 앱 랜딩.
-- `data/`
-  - `grapes.ts`, `regions.ts`, `wineries.ts`, `wines.ts`, `glossary.ts`, `styles.ts`:
-    - 정적 TS 데이터로 도메인 엔티티를 정의.
+  - `search/page.tsx`: 통합 검색(추가 구현 예정).
+  - `vinlog/page.tsx`: VinLog 앱 랜딩 (AI Vision/SAT 교육 기능은 앱 기능으로 설명만).
+- **제거된 라우트**: `/ai-vision`, `/tasting-education`, `/grapes`, `/styles` (명세상 웹에서 제거 또는 `/varietals`·`/recommend` 로 통합).
+- `data/` (및 `src/data/` 참조)
+  - 품종/와이너리/와인 데이터는 `src/data/` 의 `varietals`, `wineries`, `wines` 등 참조. 루트 `data/` 에는 `glossary.ts`, `styles.ts` 등.
 - `lib/`
-  - `sat-schema.ts`: WSET SAT 타입 모델 (`SatTastingNote`, `Appearance`, `Nose`, `Palate`, `Conclusion` 등).
-  - `ai-vision.ts`: `AiVisionResult` 타입, 예시 결과.
+  - `sat-schema.ts`: WSET SAT 타입 모델.
   - `analytics.ts`: 추후 `dataLayer` 이벤트 전송용 헬퍼.
 - `postcss.config.mjs`
-  - Tailwind v3 방식:
-    ```js
-    export default {
-      plugins: {
-        tailwindcss: {},
-        autoprefixer: {},
-      },
-    };
-    ```
+  - Tailwind v4 방식: `plugins: { '@tailwindcss/postcss': {} }`
+- `app/globals.css`
+  - `@import "tailwindcss";` + `@config "../tailwind.config.ts";`
 
 ---
 
@@ -67,30 +62,28 @@
 #### 3.1 메인 랜딩(`/`)
 
 - 히어로:
-  - 카피: “당신의 테이스팅을 데이터를 남기는 와인 쇼룸” (표현은 약간 변경 가능하나 의미 유지).
-  - Sub: AI Vision × WSET SAT → VinLog Funnel 메시지.
+  - 카피 예시(영문): “Explore great wines by place, grape and producers.”
+  - Sub: 세계 유명 산지/품종/와이너리 쇼룸 → 간단 추천 → VinLog 로깅 플로우.
   - CTA:
-    - Primary: `VinLog로 테이스팅 기록하기` (`/vinlog`).
-    - Secondary: `WSET SAT 구조 살펴보기` (`/tasting-education`).
+    - Primary: `Open wine map` (`/map`).
+    - Secondary: `Browse varietals` (`/varietals`), `Find a wine by taste` (`/recommend`).
 - 오른쪽 카드:
-  - SAT 기반 테이스팅 노트 예시 (Appearance/Nose/Structure/Conclusion).
+  - 대표 산지/품종/스타일 태그(보르도, 부르고뉴, Champagne, Tuscany 등)를 보여주는 Atlas 티저.
 
-#### 3.2 품종/스타일/교육/AI/VinLog
+#### 3.2 품종/지도/추천/VinLog
 
-- **품종(`grapes`)**
-  - 리스트: 품종 카드(색, 산도, 타닌, 바디, 향 그룹).
-  - 상세: 구조 바(산도/타닌/바디), 향 그룹 칩, 대표 산지/페어링, Mini Tasting Note 티저 폼 + VinLog CTA.
-- **스타일(`styles`)**
-  - 상황(예: 기름진 한우/삼겹살) → 추천 품종/지역 목록, 품종 상세로 연결.
-- **테이스팅 교육(`tasting-education`)**
-  - SAT 4단계(Appearance/Nose/Palate/Conclusion) 설명 + 왜 구조화가 중요한지.
-  - VinLog SAT 작성 CTA.
-- **AI Vision(`ai-vision`)**
-  - 입력(병/라벨/색) → 피처 추출 → 후보 와인 매칭 → SAT 구조 제안 플로우.
-  - 실제 모델 호출 대신 `AiVisionResult` 예시로 UX만 쇼케이스.
+- **품종(`varietals`)**
+  - 리스트: 타입 필터(레드/화이트/로제/스파클링/기타) + 카드 그리드.
+  - 상세: 이미지, 한/영 이름, 대표 산지, 페어링, 관련 품종, 대표 와인 리스트.
+- **지도(`map`)**
+  - 필터: 지역, 타입, 시음 가능, 샵 여부, 검색어.
+  - 현재는 리스트 기반 UX만 있고, 추후 Leaflet/Globe 기반 지도/글로브를 위에 얹는 형태로 확장.
+- **추천(`recommend`)**
+  - 간단한 **바디(라이트/미디엄/풀)** 선호 입력 → 해당 바디의 품종/와인 서브셋 추천.
+  - 데이터는 `src/data/varietals.ts` 의 `body` 필드와 `src/data/wines.ts` 의 `varietalSlugs` 를 활용.
 - **VinLog 랜딩(`vinlog`)**
-  - Capture → Structure → Leverage 3단계 흐름.
-  - 실제 스토어 배지는 나중에 실제 링크로 교체 전제.
+  - 라벨 인식, SAT 구조화, 교육 기능은 **앱 기능**으로만 설명.
+  - 웹에서는 간단한 기능 설명과 스크린샷/스토어 링크 정도만 제공.
 
 ---
 
@@ -101,24 +94,34 @@
   - 동적 경로는 `[slug]/page.tsx` 패턴 사용.
 - **타입/데이터**
   - WSET 관련 구조는 항상 `lib/sat-schema.ts` 의 타입을 기준으로 사용.
-  - 도메인 데이터(품종/와인/지역 등)는 `data/*.ts` 에 정의하고, 컴포넌트는 이 데이터에서만 읽는다.
+  - 도메인 데이터는 `data/*.ts` 및 `src/data/*.ts` 에 정의하고, App Router 페이지는 이 데이터에서만 읽는다.
 - **스타일**
   - Tailwind Utility 우선.
   - 디자인 토큰(색/폰트/spacing 등)은 `tailwind.config.ts` 에서 확장.
 - **버전**
-  - Tailwind는 v3.4.x를 기준으로 사용한다.
-    - v4로 업그레이드하려면 Turbopack + `@tailwindcss/node` + lightningcss 의 호환성을 먼저 검토한 뒤 진행.
+  - Tailwind는 v4 + `@tailwindcss/postcss` 조합을 사용 중이다.
+  - `app/globals.css` 에서 `@import "tailwindcss";` + `@config "../tailwind.config.ts";` 패턴을 유지한다.
 
 ---
 
-### 5. 앞으로의 확장 방향(메모)
+### 5. 언어 & i18n 전략(요약)
 
-- 실제 AI 비전 모델/백엔드 연동:
-  - `/api/vision` 라우트 추가, `lib/ai-vision.ts` 타입을 기준으로 request/response 스펙 설계.
-- 데이터 소스 고도화:
-  - 현재 정적 TS 데이터(`data/*`)를 CMS 또는 DB로 이전 (예: Sanity, Contentful, Supabase 등).
-- 다국어:
-  - 한국어/영어 지원 필요 시, Next i18n + 별도 텍스트 리소스 관리.
-- 분석:
-  - `lib/analytics.ts` 기반으로 `view_content`, `click_vinlog_cta`, `submit_mini_tasting` 등 이벤트 정의 후 GA4/Amplitude 연동.
+- **지원 언어 계획**:
+  - 기본: 영어(en).
+  - 추가: 한국어(ko), 프랑스어(fr), 이탈리아어(it), 스페인어(es), 독일어(de), 포르투갈어(pt), 일본어(ja).
+- **표기 규칙**:
+  - 와인 고유명/지명: 원어가 있으면 **원어 표기 우선**, 없으면 영어.
+  - UI 텍스트: 영어 모드 영어만, 한국어 모드 한글+영어 병기, 기타 언어는 해당 언어 중심 + 필요 시 영어 보조.
+- **구현 방향**: Next i18n + `locales/*` 또는 `i18n/*` 리소스 파일로 확장 예정.
 
+---
+
+### 6. 앞으로의 확장 방향(메모)
+
+- 세계 유명 와인·와이너리 데이터 확장(`data/wines.ts`, `data/wineries.ts`, `data/regions.ts`).
+- WSET L3+ 용어집 및 Diploma 용어 추가(`data/glossary.ts`).
+- 다국어(i18n) 지원: en 기본, ko/fr/it/es/de/pt/ja 추가 및 병기 규칙 적용.
+- 지도/글로브: Leaflet, globe.gl 등으로 `app/map` 확장.
+- 통합 검색: `app/search` 에 품종/지역/와인/용어 통합 검색 구현.
+- SEO: 페이지별 메타, 와인/제품 JSON-LD 등 `lib/seo.ts` 분리 및 적용.
+- 분석: `lib/analytics.ts` 기반으로 `view_content`, `click_vinlog_cta` 등 이벤트 정의 후 GA4/Amplitude 연동.
