@@ -1,16 +1,10 @@
 'use client'
 
 import { useLanguage } from '@/lib/language-provider'
-import { searchGlossary } from '../../data/glossary'
-import type { GlossaryTerm } from '../../data/glossary'
+import { searchGlossary, getDisplayTerm, getDisplayDefinition } from '../../data/glossary'
 
 interface Props {
   searchParams: { q?: string }
-}
-
-function getDisplayTerm(term: GlossaryTerm, lang: string): string {
-  if (lang === 'ko') return term.term
-  return term.termEn ?? term.term
 }
 
 export default function GlossaryPage({ searchParams }: Props) {
@@ -44,7 +38,7 @@ export default function GlossaryPage({ searchParams }: Props) {
           {q && (
             <>
               {' '}
-              · <span className="text-slate-500">{lang === 'ko' ? '검색어' : 'Search'}:</span>{' '}
+              · <span className="text-slate-500">{t('glossary_search_label')}:</span>{' '}
               <span className="font-mono text-slate-200">&quot;{q}&quot;</span>
             </>
           )}
@@ -61,7 +55,7 @@ export default function GlossaryPage({ searchParams }: Props) {
               <p className="mt-1 text-[11px] uppercase tracking-[0.2em] text-slate-500">
                 {term.category}
               </p>
-              <p className="mt-2 text-sm text-slate-300">{term.definition}</p>
+              <p className="mt-2 text-sm text-slate-300">{getDisplayDefinition(term, lang)}</p>
               {term.example && (
                 <p className="mt-2 text-xs text-slate-400">
                   {t('glossary_example')}: <span className="italic">{term.example}</span>

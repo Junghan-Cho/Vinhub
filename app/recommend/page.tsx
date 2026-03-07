@@ -8,12 +8,18 @@ import { wines } from '../../src/data/wines'
 
 type BodyPreference = 'any' | 'light' | 'medium' | 'full'
 
-const BODY_OPTIONS: { value: BodyPreference; label: string }[] = [
-  { value: 'any', label: 'Any body' },
-  { value: 'light', label: 'Light & refreshing' },
-  { value: 'medium', label: 'Medium, versatile' },
-  { value: 'full', label: 'Full & powerful' },
+const BODY_OPTIONS: { value: BodyPreference; labelKey: string }[] = [
+  { value: 'any', labelKey: 'any_body' },
+  { value: 'light', labelKey: 'light_refreshing' },
+  { value: 'medium', labelKey: 'medium_versatile' },
+  { value: 'full', labelKey: 'full_powerful' },
 ]
+
+const BODY_LABEL_KEYS: Record<string, string> = {
+  가벼움: 'light_refreshing',
+  미디엄: 'medium_versatile',
+  풀바디: 'full_powerful',
+}
 
 function bodyMatches(dataBody: string | undefined, pref: BodyPreference) {
   if (pref === 'any' || !dataBody) return true
@@ -25,7 +31,7 @@ function bodyMatches(dataBody: string | undefined, pref: BodyPreference) {
 }
 
 export default function RecommendPage() {
-  const { lang } = useLanguage()
+  const { lang, t } = useLanguage()
   const showKorean = lang === 'ko'
   const [bodyPref, setBodyPref] = useState<BodyPreference>('any')
 
@@ -54,18 +60,16 @@ export default function RecommendPage() {
     <section className="space-y-8">
       <header className="space-y-2">
         <h1 className="font-display text-2xl text-slate-50">
-          Taste‑based recommend
+          {t('recommend_title')}
         </h1>
         <p className="max-w-2xl text-sm text-slate-300">
-          Pick a rough body style and we&apos;ll suggest a few classic grapes and
-          benchmark wines to start with. This re‑creates the original simple
-          Vinhub recommendation flow.
+          {t('recommend_subtitle')}
         </p>
       </header>
 
       <div className="space-y-3 rounded-xl border border-slate-800 bg-surface p-4 text-sm text-slate-200">
         <h2 className="font-display text-base text-slate-50">
-          1. Choose the body you want
+          1. {t('choose_body')}
         </h2>
         <div className="flex flex-wrap gap-2 text-xs">
           {BODY_OPTIONS.map((opt) => {
@@ -82,14 +86,13 @@ export default function RecommendPage() {
                     : 'border-slate-700 bg-surface text-slate-200 hover:border-slate-500')
                 }
               >
-                {opt.label}
+                {t(opt.labelKey)}
               </button>
             )
           })}
         </div>
         <p className="text-xs text-slate-400">
-          We&apos;ll match this preference to varietal body information and then
-          to wines in the current dataset.
+          {t('recommend_subtitle')}
         </p>
       </div>
 
@@ -97,18 +100,18 @@ export default function RecommendPage() {
         <div className="space-y-3">
           <div className="flex items-baseline justify-between gap-2">
             <h2 className="font-display text-base text-slate-50">
-              2. Suggested varietals
+              2. {t('suggested_varietals')}
             </h2>
             <Link
               href="/varietals"
               className="text-xs text-accent hover:underline"
             >
-              View all varietals
+              {t('view_all_varietals')}
             </Link>
           </div>
           {topVarietals.length === 0 ? (
             <p className="text-xs text-slate-400">
-              No varietals match this preference yet.
+              {t('no_varietals_preference')}
             </p>
           ) : (
             <div className="grid gap-3 text-xs">
@@ -132,7 +135,7 @@ export default function RecommendPage() {
                     </p>
                   </div>
                   <span className="shrink-0 rounded-full bg-slate-900 px-2 py-0.5 text-[11px] text-slate-100">
-                    {v.body}
+                    {v.body && BODY_LABEL_KEYS[v.body] ? t(BODY_LABEL_KEYS[v.body]) : v.body}
                   </span>
                 </Link>
               ))}
@@ -143,15 +146,12 @@ export default function RecommendPage() {
         <div className="space-y-3">
           <div className="flex items-baseline justify-between gap-2">
             <h2 className="font-display text-base text-slate-50">
-              3. Suggested wines
+              3. {t('suggested_wines')}
             </h2>
-            <span className="text-[11px] text-slate-500">
-              Sample of benchmark labels (max 12)
-            </span>
           </div>
           {topWines.length === 0 ? (
             <p className="text-xs text-slate-400">
-              No wines match this preference yet.
+              {t('no_wines_match')}
             </p>
           ) : (
             <div className="grid gap-3 text-xs">

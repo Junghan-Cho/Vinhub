@@ -25,7 +25,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     if (typeof window === 'undefined') return 'en'
     try {
       const saved = localStorage.getItem(STORAGE_KEY) as Lang | null
-      const supported: Lang[] = ['ko', 'en', 'fr', 'it', 'ja', 'zh']
+      const supported: Lang[] = ['ko', 'en', 'fr', 'it', 'es', 'de', 'pt', 'ja', 'zh']
       if (saved && supported.includes(saved)) return saved
     } catch (_) {}
     return 'en'

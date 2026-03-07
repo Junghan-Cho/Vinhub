@@ -5,16 +5,24 @@ import Link from 'next/link'
 import { useLanguage } from '@/lib/language-provider'
 import { varietals } from '../../src/data/varietals'
 
-const TYPE_FILTERS: { value: 'all' | string; label: string }[] = [
-  { value: 'all', label: 'All types' },
-  { value: '레드', label: 'Red' },
-  { value: '화이트', label: 'White' },
-  { value: '로제', label: 'Rosé' },
-  { value: '스파클링', label: 'Sparkling' },
+const TYPE_FILTERS: { value: 'all' | string; labelKey: string }[] = [
+  { value: 'all', labelKey: 'all_types' },
+  { value: '레드', labelKey: 'filter_red' },
+  { value: '화이트', labelKey: 'filter_white' },
+  { value: '로제', labelKey: 'filter_rose' },
+  { value: '스파클링', labelKey: 'filter_sparkling' },
 ]
 
+const TYPE_LABEL_KEYS: Record<string, string> = {
+  레드: 'filter_red',
+  화이트: 'filter_white',
+  로제: 'filter_rose',
+  스파클링: 'filter_sparkling',
+  기타: 'filter_other',
+}
+
 export default function VarietalsPage() {
-  const { lang } = useLanguage()
+  const { lang, t } = useLanguage()
   const [typeFilter, setTypeFilter] = useState<'all' | string>('all')
   const showKorean = lang === 'ko'
 
@@ -26,15 +34,14 @@ export default function VarietalsPage() {
   return (
     <section className="space-y-6">
       <header className="space-y-2">
-        <h1 className="font-display text-2xl text-slate-50">Varietals</h1>
+        <h1 className="font-display text-2xl text-slate-50">{t('varietals_title')}</h1>
         <p className="max-w-2xl text-sm text-slate-300">
-          Browse classic grapes used in world‑famous wines. Filter by style and jump into
-          detailed food pairings and benchmark labels.
+          {t('varietals_subtitle')}
         </p>
       </header>
 
       <div className="flex flex-wrap items-center gap-2">
-        <span className="mr-1 text-sm text-slate-300">Type:</span>
+        <span className="mr-1 text-sm text-slate-300">{t('type')}:</span>
         {TYPE_FILTERS.map((opt) => {
           const active = typeFilter === opt.value
           return (
@@ -49,7 +56,7 @@ export default function VarietalsPage() {
                   : 'border-slate-700 bg-surface text-slate-200 hover:border-slate-500')
               }
             >
-              {opt.label}
+              {t(opt.labelKey)}
             </button>
           )
         })}
@@ -78,7 +85,7 @@ export default function VarietalsPage() {
                 {showKorean && <div className="text-xs text-slate-400">{v.nameEn}</div>}
               </div>
               <span className="rounded-full bg-slate-800 px-2 py-0.5 text-[11px] text-slate-200">
-                {v.type}
+                {TYPE_LABEL_KEYS[v.type] ? t(TYPE_LABEL_KEYS[v.type]) : v.type}
               </span>
             </div>
             <p className="line-clamp-3 text-xs text-slate-300">
@@ -90,7 +97,7 @@ export default function VarietalsPage() {
 
       {filtered.length === 0 && (
         <p className="text-sm text-slate-400">
-          No varietals match this filter yet.
+          {t('no_varietals_match')}
         </p>
       )}
     </section>

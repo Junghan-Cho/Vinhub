@@ -11,7 +11,7 @@ type PageProps = {
 }
 
 export default function WineryDetailPage({ params }: PageProps) {
-  const { lang } = useLanguage()
+  const { lang, t } = useLanguage()
   const showKorean = lang === 'ko'
   const winery = wineries.find((w) => w.slug === params.slug)
 
@@ -24,7 +24,7 @@ export default function WineryDetailPage({ params }: PageProps) {
   return (
     <section className="space-y-8">
       <Link href="/map" className="text-xs text-slate-400 hover:text-accent">
-        ← Back to map
+        ← {t('back_to_map')}
       </Link>
 
       <div className="grid gap-6 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1.2fr)] md:items-start">
@@ -66,7 +66,7 @@ export default function WineryDetailPage({ params }: PageProps) {
 
           {winery.address && (
             <div className="space-y-1 text-sm text-slate-300">
-              <h2 className="font-semibold text-slate-100">Address</h2>
+              <h2 className="font-semibold text-slate-100">{t('address')}</h2>
               <p>{winery.address}</p>
             </div>
           )}
@@ -87,7 +87,7 @@ export default function WineryDetailPage({ params }: PageProps) {
       {wineryWines.length > 0 && (
         <div className="space-y-3">
           <h2 className="font-display text-lg text-slate-50">
-            Wines from this producer
+            {t('wines_from_producer')}
           </h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {wineryWines.map((w) => (

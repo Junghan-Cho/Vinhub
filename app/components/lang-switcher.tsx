@@ -8,6 +8,9 @@ const LABEL_KEYS: Record<Lang, string> = {
   en: 'lang_en',
   fr: 'lang_fr',
   it: 'lang_it',
+  es: 'lang_es',
+  de: 'lang_de',
+  pt: 'lang_pt',
   ja: 'lang_ja',
   zh: 'lang_zh',
 }

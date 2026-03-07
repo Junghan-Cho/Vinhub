@@ -13,7 +13,7 @@ export function HeaderNav() {
         <Link href="/" className="font-display text-xl tracking-tight">
           {t('nav_siteName')}
         </Link>
-        <span className="text-xs text-slate-400">Wine Atlas & Varietals</span>
+        <span className="text-xs text-slate-400">{t('tagline')}</span>
       </div>
       <div className="flex items-center gap-4 text-sm text-slate-300">
         <Link href="/varietals" className="hover:text-white">

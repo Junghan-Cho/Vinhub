@@ -11,13 +11,20 @@ const REGION_FILTERS = ['All regions', ...allRegions]
 
 const TYPE_FILTERS = ['All types', '레드', '화이트', '로제', '스파클링'] as const
 
+const TYPE_LABEL_KEYS: Record<string, string> = {
+  레드: 'filter_red',
+  화이트: 'filter_white',
+  로제: 'filter_rose',
+  스파클링: 'filter_sparkling',
+}
+
 function wineryProducesType(slug: string, wineType: string): boolean {
   if (wineType === 'All types') return true
   return wines.some((w) => w.winerySlug === slug && w.type === wineType)
 }
 
 export default function MapPage() {
-  const { lang } = useLanguage()
+  const { lang, t } = useLanguage()
   const showKorean = lang === 'ko'
   const [regionFilter, setRegionFilter] = useState<string>('All regions')
   const [typeFilter, setTypeFilter] = useState<(typeof TYPE_FILTERS)[number]>('All types')
@@ -54,15 +61,14 @@ export default function MapPage() {
   return (
     <section className="space-y-6">
       <header className="space-y-2">
-        <h1 className="font-display text-2xl text-slate-50">Wine map (list view)</h1>
+        <h1 className="font-display text-2xl text-slate-50">{t('map_title')}</h1>
         <p className="max-w-2xl text-sm text-slate-300">
-          Explore classic regions and producers from Bordeaux, Burgundy, Champagne, Tuscany, Rioja,
-          Napa and more. Interactive map and globe views will be added on top of this list.
+          {t('map_subtitle')}
         </p>
       </header>
 
       <div className="flex flex-wrap items-center gap-2 text-xs">
-        <span className="mr-1 text-slate-300">Region:</span>
+        <span className="mr-1 text-slate-300">{t('region')}:</span>
         {REGION_FILTERS.map((r) => {
           const active = regionFilter === r
           return (
@@ -77,7 +83,7 @@ export default function MapPage() {
                   : 'border-slate-700 bg-surface text-slate-200 hover:border-slate-500')
               }
             >
-              {r}
+              {r === 'All regions' ? t('all_regions') : r}
             </button>
           )
         })}
@@ -85,14 +91,14 @@ export default function MapPage() {
 
       <div className="flex flex-wrap items-center gap-3 text-xs">
         <div className="flex items-center gap-2">
-          <span className="text-slate-300">Type:</span>
-          {TYPE_FILTERS.map((t) => {
-            const active = typeFilter === t
+          <span className="text-slate-300">{t('type')}:</span>
+          {TYPE_FILTERS.map((typeVal) => {
+            const active = typeFilter === typeVal
             return (
               <button
-                key={t}
+                key={typeVal}
                 type="button"
-                onClick={() => setTypeFilter(t)}
+                onClick={() => setTypeFilter(typeVal)}
                 className={
                   'rounded-full border px-3 py-1 ' +
                   (active
@@ -100,7 +106,7 @@ export default function MapPage() {
                     : 'border-slate-700 bg-surface text-slate-200 hover:border-slate-500')
                 }
               >
-                {t === 'All types' ? 'All' : t}
+                {typeVal === 'All types' ? t('all_types') : (TYPE_LABEL_KEYS[typeVal] ? t(TYPE_LABEL_KEYS[typeVal]) : typeVal)}
               </button>
             )
           })}
@@ -112,7 +118,7 @@ export default function MapPage() {
             checked={filterTasting}
             onChange={(e) => setFilterTasting(e.target.checked)}
           />
-          Tasting available
+          {t('tasting_available')}
         </label>
         <label className="flex items-center gap-1 text-slate-300">
           <input
@@ -121,11 +127,11 @@ export default function MapPage() {
             checked={filterShop}
             onChange={(e) => setFilterShop(e.target.checked)}
           />
-          Has shop
+          {t('has_shop')}
         </label>
         <input
           type="search"
-          placeholder="Search name or region"
+          placeholder={t('search_name_region')}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="ml-auto rounded-full border border-slate-700 bg-surface px-3 py-1 text-xs text-slate-100 placeholder:text-slate-500 focus:border-accent focus:outline-none"
@@ -148,8 +154,8 @@ export default function MapPage() {
               <span className="rounded-full bg-slate-900 px-2 py-0.5 text-slate-100">
                 {w.region}
               </span>
-              {w.tastingAvailable && <span>Tasting</span>}
-              {w.hasShop && <span>Shop</span>}
+              {w.tastingAvailable && <span>{t('tasting')}</span>}
+              {w.hasShop && <span>{t('shop')}</span>}
             </div>
           </Link>
         ))}
@@ -157,7 +163,7 @@ export default function MapPage() {
 
       {filtered.length === 0 && (
         <p className="text-sm text-slate-400">
-          No wineries match this filter yet.
+          {t('no_wineries_match')}
         </p>
       )}
     </section>

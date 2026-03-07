@@ -10,8 +10,21 @@ type PageProps = {
   params: { slug: string }
 }
 
+const TYPE_LABEL_KEYS: Record<string, string> = {
+  레드: 'filter_red',
+  화이트: 'filter_white',
+  로제: 'filter_rose',
+  스파클링: 'filter_sparkling',
+  기타: 'filter_other',
+}
+const BODY_LABEL_KEYS: Record<string, string> = {
+  가벼움: 'light_refreshing',
+  미디엄: 'medium_versatile',
+  풀바디: 'full_powerful',
+}
+
 export default function VarietalDetailPage({ params }: PageProps) {
-  const { lang } = useLanguage()
+  const { lang, t } = useLanguage()
   const showKorean = lang === 'ko'
   const varietal = varietals.find((v) => v.slug === params.slug)
 
@@ -29,7 +42,7 @@ export default function VarietalDetailPage({ params }: PageProps) {
   return (
     <section className="space-y-8">
       <Link href="/varietals" className="text-xs text-slate-400 hover:text-accent">
-        ← Back to varietals
+        ← {t('back_to_varietals')}
       </Link>
 
       <div className="grid gap-6 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1.2fr)] md:items-start">
@@ -57,7 +70,7 @@ export default function VarietalDetailPage({ params }: PageProps) {
           </div>
           <div className="flex flex-wrap items-center gap-2 text-xs">
             <span className="rounded-full bg-slate-800 px-2 py-1 text-slate-100">
-              {varietal.type}
+              {TYPE_LABEL_KEYS[varietal.type] ? t(TYPE_LABEL_KEYS[varietal.type]) : varietal.type}
             </span>
             {varietal.regions.length > 0 && (
               <span className="text-slate-400">
@@ -66,7 +79,7 @@ export default function VarietalDetailPage({ params }: PageProps) {
             )}
             {varietal.body && (
               <span className="rounded-full border border-slate-700 px-2 py-1 text-slate-200">
-                Body: {varietal.body}
+                {t('body')}: {BODY_LABEL_KEYS[varietal.body] ? t(BODY_LABEL_KEYS[varietal.body]) : varietal.body}
               </span>
             )}
           </div>
@@ -74,7 +87,7 @@ export default function VarietalDetailPage({ params }: PageProps) {
             {varietal.oneLinerEn || varietal.oneLiner}
           </p>
           <div className="space-y-1 text-sm text-slate-300">
-            <h2 className="font-semibold text-slate-100">Taste & aroma</h2>
+            <h2 className="font-semibold text-slate-100">{t('taste_aroma')}</h2>
             <p className="text-sm text-slate-300">
               {varietal.tasteAndAromaEn || varietal.tasteAndAroma}
             </p>
@@ -84,7 +97,7 @@ export default function VarietalDetailPage({ params }: PageProps) {
 
       {varietal.pairings.length > 0 && (
         <div className="space-y-3">
-          <h2 className="font-display text-lg text-slate-50">Food pairings</h2>
+          <h2 className="font-display text-lg text-slate-50">{t('food_pairings')}</h2>
           <div className="flex flex-wrap gap-2 text-xs">
             {varietal.pairings.map((p) => (
               <span
@@ -101,7 +114,7 @@ export default function VarietalDetailPage({ params }: PageProps) {
       {winesFromVarietal.length > 0 && (
         <div className="space-y-3">
           <h2 className="font-display text-lg text-slate-50">
-            Benchmark wines
+            {t('representative_wines')}
           </h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {winesFromVarietal.map((w) => (
@@ -133,8 +146,8 @@ export default function VarietalDetailPage({ params }: PageProps) {
 
       {relatedVarietals.length > 0 && (
         <div className="space-y-3">
-          <h2 className="font-display text-lg text-slate-50">
-            Related varietals
+            <h2 className="font-display text-lg text-slate-50">
+            {t('related_varietals')}
           </h2>
           <div className="flex flex-wrap gap-2 text-xs">
             {relatedVarietals.map((v) => (

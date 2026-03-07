@@ -32,7 +32,7 @@ export default function WineDetailPage({ params }: PageProps) {
         href={winery ? `/wineries/${winery.slug}` : '/map'}
         className="text-xs text-slate-400 hover:text-accent"
       >
-        ← {winery ? `Back to ${showKorean ? winery.nameKo : winery.nameEn}` : 'Back to map'}
+        ← {winery ? `${t('back_to')} ${showKorean ? winery.nameKo : winery.nameEn}` : t('back_to_map')}
       </Link>
 
       <div className="grid gap-6 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1.2fr)] md:items-start">
@@ -85,7 +85,7 @@ export default function WineDetailPage({ params }: PageProps) {
           {Object.keys(tech).length > 0 && (
             <div className="space-y-2 rounded-xl border border-slate-800 bg-slate-950/70 p-4 text-xs text-slate-200">
               <h2 className="text-sm font-semibold text-slate-100">
-                Technical sheet
+                {t('technical_sheet')}
               </h2>
               <dl className="grid grid-cols-[auto,1fr] gap-x-4 gap-y-1">
                 {tech.alcohol && (
@@ -148,7 +148,7 @@ export default function WineDetailPage({ params }: PageProps) {
 
       {wineVarietals.length > 0 && (
         <div className="space-y-3 text-xs">
-          <h2 className="font-display text-lg text-slate-50">Varietals</h2>
+          <h2 className="font-display text-lg text-slate-50">{t('varietals_section')}</h2>
           <div className="flex flex-wrap gap-2">
             {wineVarietals.map((v) => (
               <Link
