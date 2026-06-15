@@ -7,9 +7,7 @@ const config = [
       ".next/**",
       "dist/**",
       "node_modules/**",
-      // legacy SPA code (kept for reference, not shipped by Next app router)
-      "src/pages/**",
-      "src/components/**",
+      "archive/**",
     ],
   },
   ...next,

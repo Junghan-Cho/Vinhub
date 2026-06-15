@@ -2,7 +2,7 @@
 
 ### Task 1: 가짜 데이터 생성 로직 제거
 
-파일: src/data/wineries.ts
+파일: archive/vite-spa/src/data/wineries.ts (당시 `src/data/wineries.ts`)
 
 - expandWineries 함수 전체 삭제
 
@@ -16,7 +16,7 @@
 
 ### Task 2: VinLog 앱 CTA 버튼 추가
 
-파일: src/pages/WineDetail.tsx, src/pages/VarietalDetail.tsx, src/i18n/translations.ts
+파일: archive/vite-spa/src/pages/WineDetail.tsx, archive/vite-spa/src/pages/VarietalDetail.tsx, archive/vite-spa/src/i18n/translations.ts
 
 - 와인 상세·품종 상세 페이지 하단에 CTA 버튼 추가
 
@@ -32,7 +32,7 @@
 
 ### Task 3: SEO 및 메타 태그 설정
 
-파일: index.html
+파일: archive/vite-spa/index.html (당시 루트 `index.html`)
 
 - title: VinLog - 와인의 모든 순간을 기록하다
 

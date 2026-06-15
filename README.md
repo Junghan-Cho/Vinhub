@@ -28,9 +28,16 @@ npm run build
 
 ## 문서
 
-- **`docs.md`** — 개발/운영 가이드라인
-- **`VINHUB_SHOWROOM_SPEC.md`** — 제품·IA 명세(클래식 UI 기준)
-- **`DEPLOY-GITHUB.md`** — GitHub·Vercel 배포(상단에 **현재 Vinhub** 요약, 하단은 과거 원문 보관)
+- **[`docs/README.md`](docs/README.md)** — 문서 목록
+- **[`docs/development.md`](docs/development.md)** — 개발/운영 가이드라인
+- **[`docs/spec.md`](docs/spec.md)** — 제품·IA 명세(클래식 UI 기준)
+- **[`docs/deploy.md`](docs/deploy.md)** — GitHub·Vercel 배포(상단에 **현재 Vinhub** 요약, 하단은 과거 원문 보관)
+
+루트의 `docs.md` 등은 이동 안내 stub입니다.
+
+## 레거시 (참고 전용)
+
+- **[`archive/vite-spa/`](archive/vite-spa/)** — Vite + React Router SPA (지도·글로브·블렌딩 추천 등). 루트 Next 빌드와 무관.
 
 ## 배포 (Vercel)
 
@@ -42,7 +49,7 @@ npm run build
 
 ## (기록) 예전 README — Vite/SPA `wine-site` 시절
 
-아래는 **과거 Vite + `src/pages` SPA** 를 전제로 하던 안내를 기록만 남긴 것이다. 현재 레포는 Next이므로 그대로 따르지 않는다.
+아래는 **과거 Vite + `archive/vite-spa/src/pages` SPA** 를 전제로 하던 안내를 기록만 남긴 것이다. 현재 레포는 Next이므로 그대로 따르지 않는다.
 
 - 로컬 경로 예시: `cd c:\work\wine-site`
 - 개발 포트 예시: `http://localhost:5173`
