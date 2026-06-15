@@ -1,5 +1,6 @@
 'use client'
 
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useLanguage } from '@/lib/language-provider'
 import { searchGlossary, getDisplayTerm, getDisplayDefinition } from '../../data/glossary'
 
@@ -12,6 +13,18 @@ export default function GlossaryPage({ searchParams }: Props) {
   const professionalOnly = (searchParams?.pro ?? '1') !== '0'
   const terms = searchGlossary(q).filter((t) => (professionalOnly ? isProfessionalTerm(t.slug) : true))
   const { lang, t } = useLanguage()
+  const router = useRouter()
+  const pathname = usePathname()
+  const currentSearchParams = useSearchParams()
+
+  const handleProfessionalOnlyChange = (checked: boolean) => {
+    const params = new URLSearchParams(currentSearchParams.toString())
+    params.set('pro', checked ? '1' : '0')
+    if (q) params.set('q', q)
+    else params.delete('q')
+    const query = params.toString()
+    router.push(query ? `${pathname}?${query}` : (pathname ?? '/'))
+  }
 
   return (
     <div className="space-y-8">
@@ -30,14 +43,7 @@ export default function GlossaryPage({ searchParams }: Props) {
                 type="checkbox"
                 defaultChecked={professionalOnly}
                 className="h-4 w-4 accent-accent"
-                onChange={(e) => {
-                  const url = new URL(window.location.href)
-                  url.searchParams.set('pro', e.currentTarget.checked ? '1' : '0')
-                  // 기존 검색어 유지
-                  if (q) url.searchParams.set('q', q)
-                  else url.searchParams.delete('q')
-                  window.location.href = url.toString()
-                }}
+                onChange={(e) => handleProfessionalOnlyChange(e.currentTarget.checked)}
               />
               전문용어만 보기
             </label>
